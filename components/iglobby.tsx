@@ -64,8 +64,8 @@ export default function InstagramLobby() {
 
                 {/* CONTENEDOR DEL WIDGET DE BEHOLD */}
                 <div className="w-full bg-[#0f0f1e]/40 border border-white/10 rounded-2xl p-4 md:p-6 shadow-2xl overflow-hidden custom-behold-wrapper">
-                    {/* Tu etiqueta nativa con tu feed-id real */}
-                    <behold-widget feed-id="3vSadXFxRx3CV28QVQ38"></behold-widget>
+                    {/* Engañamos a TypeScript creando el elemento de forma dinámica */}
+                    {React.createElement('behold-widget', { 'feed-id': '3vSadXFxRx3CV28QVQ38' })}
                 </div>
 
                 {/* Botón inferior */}
