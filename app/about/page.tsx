@@ -71,7 +71,7 @@ export default function About() {
           >
             <img
               src="/about2.JPG"
-              alt="JeremiasPDD on stage 2"
+              alt="JeremiasPDD"
               // object-cover se encarga de recortar la imagen automáticamente para que llene el cuadrado sin deformarse
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               style={{ objectPosition: 'center 25%' }}
@@ -87,7 +87,7 @@ export default function About() {
           >
             <img
               src="/youth.JPG"
-              alt="JeremiasPDD on stage 2"
+              alt="JeremiasPDD Evangelism with CFAN"
               // object-cover se encarga de recortar la imagen automáticamente para que llene el cuadrado sin deformarse
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               style={{ objectPosition: 'center 40%' }}
@@ -103,7 +103,7 @@ export default function About() {
           >
             <img
               src="/youth4.jpg"
-              alt="JeremiasPDD on stage 2"
+              alt="JeremiasPDD CFAN Jesus Camp Evangelismo"
               // object-cover se encarga de recortar la imagen automáticamente para que llene el cuadrado sin deformarse
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               style={{ objectPosition: 'center 40%' }}

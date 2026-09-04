@@ -33,7 +33,7 @@ export default function Donation() {
 
   // 1. Datos de las Plataformas con sus iconos reales asignados
   const plataformas = [
-    { name: 'Mercado Pago', color: 'bg-[#009EE3] hover:bg-[#007EB5]', link: 'link.mercadopago.com.ar/adonai', logo: <SiMercadopago className="w-5 h-6" /> }, // MP requiere un poco más de tamaño por su forma
+    { name: 'Mercado Pago', color: 'bg-[#009EE3] hover:bg-[#007EB5]', link: 'https://link.mercadopago.com.ar/adonai', logo: <SiMercadopago className="w-5 h-6" /> }, // MP requiere un poco más de tamaño por su forma
     { name: 'PayPal', color: 'bg-[#003087] hover:bg-[#002261]', link: 'https://paypal.me/jeremiaspdd', logo: <SiPaypal className="w-5 h-5" /> },
     { name: 'Wise', color: 'bg-[#00B67A] hover:bg-[#009161]', link: 'https://wise.com/pay/me/jeremiase8', logo: <SiWise className="w-5 h-5" /> },
     { name: 'Patreon', color: 'bg-[#FF424D] hover:bg-[#D6303A]', link: 'https://patreon.com/jeremiaspdd?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', logo: <SiPatreon className="w-5 h-5" /> },
