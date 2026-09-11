@@ -1,7 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+import '../lib/i18n';
 import {
   SiYoutube,
   SiInstagram,
@@ -13,9 +17,42 @@ import {
   SiDailymotion
 } from 'react-icons/si';
 
-export default function Footer() {
+function Footer() {
 
   const { t } = useTranslation()
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Verificamos si i18next está inicializado de verdad
+    if (i18next.isInitialized) {
+      setIsReady(true);
+    } else {
+      // Si no lo está, escuchamos su evento nativo de inicialización
+      const handleInitialized = () => {
+        setIsReady(true);
+      };
+      i18next.on('initialized', handleInitialized);
+
+      // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+      const backupTimer = setTimeout(() => {
+        setIsReady(true);
+      }, 100);
+
+      return () => {
+        i18next.off('initialized', handleInitialized);
+        clearTimeout(backupTimer);
+      };
+    }
+  }, []);
+
+  // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+        <p className="text-lg">Loading translations...</p>
+      </div>
+    );
+  }
 
   return (
     <footer className="bg-[#0d0d1a] border-t border-white/10 py-4 px4" dir="rtl">
@@ -134,3 +171,7 @@ export default function Footer() {
     </footer>
   )
 }
+
+export default dynamic(() => Promise.resolve(Footer), {
+  ssr: false
+});

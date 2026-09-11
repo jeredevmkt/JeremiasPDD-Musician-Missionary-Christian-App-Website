@@ -4,20 +4,52 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import dynamic from 'next/dynamic';
 import Flag from 'react-world-flags'
+import i18next from 'i18next';
+import '../lib/i18n';
 
-
-export default function Navbar() {
+function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMobileLangOpen, setIsMobileLangOpen] = useState(false)
   const pathname = usePathname()
   const { t, i18n } = useTranslation()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    // Verificamos si i18next está inicializado de verdad
+    if (i18next.isInitialized) {
+      setIsReady(true);
+    } else {
+      // Si no lo está, escuchamos su evento nativo de inicialización
+      const handleInitialized = () => {
+        setIsReady(true);
+      };
+      i18next.on('initialized', handleInitialized);
+
+      // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+      const backupTimer = setTimeout(() => {
+        setIsReady(true);
+      }, 100);
+
+      return () => {
+        i18next.off('initialized', handleInitialized);
+        clearTimeout(backupTimer);
+      };
+    }
+  }, []);
+
+  // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+        <p className="text-lg">Loading translations...</p>
+      </div>
+    );
+  }
 
   // Mapeo de los 4 idiomas solicitados con sus respectivas banderas
   const languages = [
@@ -75,7 +107,7 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Bloque de Acciones: Selector de Idioma + Botón Admin */}
+        {/* Bloque de Acciones: Selector de Idioma*/}
         <div className="hidden md:flex items-center gap-4">
 
           {/* CONTENEDOR RELATIVE OBLIGATORIO: Mantiene el desplegable en su lugar */}
@@ -117,11 +149,6 @@ export default function Navbar() {
               </div>
             )}
           </div>
-
-          {/* Admin Button (Queda perfectamente alineado al lado del selector) */}
-          <Link href="/admin" className="px-4 py-1.5 bg-[#9900df] hover:bg-[#e03d5f] text-white rounded-lg text-sm font-semibold transition">
-            Admin
-          </Link>
         </div>
 
         {/* Mobile burger */}
@@ -187,15 +214,12 @@ export default function Navbar() {
               </div>
             )}
           </div>
-
-          {/* Admin Button Mobile */}
-          <Link href="/admin"
-            className="block text-center px-4 py-2 bg-[#9900df] text-white rounded-lg text-sm font-semibold"
-            onClick={() => setIsOpen(false)}>
-            Admin
-          </Link>
         </div>
       )}
     </nav>
   )
 }
+
+export default dynamic(() => Promise.resolve(Navbar), {
+  ssr: false
+});

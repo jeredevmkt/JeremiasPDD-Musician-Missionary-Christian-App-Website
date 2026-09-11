@@ -2,18 +2,43 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
 import { useTranslation } from 'react-i18next'
+import dynamic from 'next/dynamic';
+import i18next from 'i18next';
+import '../lib/i18n';
+import { subscribeNewsletterAction } from '../lib/actions'
 
-export default function NewsletterModal() {
+function NewsletterModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const { t, i18n } = useTranslation()
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
+        // Verificamos si i18next está inicializado de verdad
+        if (i18next.isInitialized) {
+            setIsReady(true);
+        } else {
+            // Si no lo está, escuchamos su evento nativo de inicialización
+            const handleInitialized = () => {
+                setIsReady(true);
+            };
+            i18next.on('initialized', handleInitialized);
+
+            // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+            const backupTimer = setTimeout(() => {
+                setIsReady(true);
+            }, 100);
+
+            return () => {
+                i18next.off('initialized', handleInitialized);
+                clearTimeout(backupTimer);
+            };
+        }
+
         // Si el usuario cambia el idioma, borramos el bloqueo para permitir que lo vea en su nueva traducción
         localStorage.removeItem('newsletter_dismissed');
         const timer = setTimeout(() => {
@@ -23,6 +48,15 @@ export default function NewsletterModal() {
         // Limpieza del temporizador si el usuario cambia de idioma antes de los 10 segundos o se va de la página
         return () => clearTimeout(timer);
     }, [i18n.language]);
+
+    // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+    if (!isReady) {
+        return (
+            <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+                <p className="text-lg">Loading translations...</p>
+            </div>
+        );
+    }
 
     const handleClose = () => {
         setIsOpen(false);
@@ -34,14 +68,14 @@ export default function NewsletterModal() {
         setLoading(true);
         setStatus('idle');
 
-        const { error } = await supabase
-            .from('newsletter_subscribers')
-            .insert({ email, phone: phone || null });
+        // Llamamos a la acción segura del servidor enviando los datos
+        const result = await subscribeNewsletterAction(email, phone || null)
 
         setLoading(false);
 
-        if (error) {
-            // Si el email ya existe, Supabase devuelve un error de duplicado (código 23505)
+        if (!result.success) {
+            // Si no funcionó, verificamos si fue por correo duplicado (código '23505' en Postgres)
+            // O si fue cualquier otro error de conexión
             setStatus('error');
         } else {
             setStatus('success');
@@ -99,7 +133,6 @@ export default function NewsletterModal() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="ejemplo@correo.com"
                                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-purple-500 outline-none transition"
                                 />
                             </div>
@@ -114,7 +147,6 @@ export default function NewsletterModal() {
                                     required
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
-                                    placeholder="+54 911 21711944"
                                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:border-purple-500 outline-none transition"
                                 />
                             </div>
@@ -145,3 +177,7 @@ export default function NewsletterModal() {
         </AnimatePresence>
     );
 }
+
+export default dynamic(() => Promise.resolve(NewsletterModal), {
+    ssr: false
+});

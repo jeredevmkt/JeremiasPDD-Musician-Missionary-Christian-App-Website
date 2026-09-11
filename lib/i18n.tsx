@@ -2,6 +2,113 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// --- VARIABLES DE TEXTO PARA ORACIÓN ACTUALIZADAS (FÁCILES DE EDITAR) ---
+
+const PRAYER_TEXT_ES = `
+<strong>🚨 MOTIVOS CRÍTICOS DE ORACIÓN 🚨</strong>
+<li><strong>🙏🏼 Petición Especial por mi Familia 🚘:</strong> Les ruego encarecidamente que levanten un clamor por mi familia. Mi hermano Ariel tuvo un choque automovilístico y lamentablemente no contaba con licencia de conducir. Pedimos para que Dios traiga calma total al corazón de los afectados y nos permita llegar a un acuerdo, ya que están solicitando una compensación de 5 millones de pesos ARS.</li>
+<li><strong>🙏🏼 Hogar de Paz a las Naciones 🌍:</strong> Es un proyecto de discipulado e iglesia en la nube que hace tiempo late en mi corazón. Antes de saltar a otro continente, quiero que mis discípulos y los discípulos recién convertidos puedan tener un espacio en donde seguir creciendo. Todo líder y ministro que quiera sumarse, esta es la visión.</li>
+
+<br />
+<strong>🗓️ PRÓXIMAS MISIONES Y AGENDA DE EVENTOS ¡Acompáñame orando! 🙏🏼</strong>
+<br />
+<strong>• 🙏🏼 SEPTIEMBRE:</strong>
+<li>📍 Obligado: Del 03 al 13</li>
+<li>📍 Luque: Del 14 al 20</li>
+<li>🎪 Campaña "5 días de esperanza" en 3 Bocas: Del 21 al 25</li>
+<li>🌅 Noche de Esperanza (Paseo Costero San Antonio): 26/09</li>
+
+<strong>• 🙏🏼 OCTUBRE:</strong>
+<li>🏢 CFA Limpio: Evento especial junto a mi profesor David Kandole 🇺🇸</li>
+<li>⛺️ Campamento de Jesús: En Buenos Aires, Argentina 🇦🇷 (Del 12 al 17)</li>
+<li>🌍 Presentación de la misión de África a las iglesias locales.</li>
+
+<strong>• 🙏🏼 NOVIEMBRE:</strong>
+<li>🌍 Presentación de la misión de África a las iglesias ¡Seguimos expandiendo la misión!</li>
+
+<strong>• 🙏🏼 DICIEMBRE (Destino Europa ✈️🇪🇺):</strong>
+<li>🗺️ Hay que saltar el charco hacia otros continentes. ¿Hacia dónde abrirá las puertas el Señor? Estoy orando por: ¡Reino Unido, España y Países Bajos!</li>
+`.trim();
+
+const PRAYER_TEXT_EN = `
+<strong>🚨 CRITICAL PRAYER REQUESTS 🚨</strong>
+<li><strong>🙏🏼 Special Request for my Family 🚘:</strong> I earnestly ask you to lift up a prayer for my family. My brother Ariel was involved in a car accident and unfortunately did not have a driver's license. We pray that God brings total peace to the hearts of those affected and allows us to reach an agreement, as they are requesting a compensation of 5 million ARS pesos.</li>
+<li><strong>🙏🏼 Hogar de Paz a las Naciones 🌍:</strong> This is a discipleship and cloud church project that has been beating in my heart for a long time. Before jumping to another continent, I want my disciples and newly converted disciples to have a space where they can continue to grow. Any leader and minister who wants to join, this is the vision.</li>
+
+<br />
+<strong>🗓️ UPCOMING MISSIONS AND EVENT SCHEDULE Join me in prayer! 🙏🏼</strong>
+<br />
+<strong>• 🙏🏼 SEPTEMBER:</strong>
+<li>📍 Obligado: From Sept 03 to 13</li>
+<li>📍 Luque: From Sept 14 to 20</li>
+<li>🎪 "5 Days of Hope" Campaign in 3 Bocas: From Sept 21 to 25</li>
+<li>🌅 Night of Hope (Paseo Costero San Antonio): 09/26</li>
+
+<strong>• 🙏🏼 OCTOBER:</strong>
+<li>🏢 CFA Limpio: Special event alongside my teacher David Kandole 🇺🇸</li>
+<li>⛺️ Jesus Camp: In Buenos Aires, Argentina 🇦🇷 (From Oct 12 to 17)</li>
+<li>🌍 Presentation of the African mission to local churches.</li>
+
+<strong>• 🙏🏼 NOVEMBER:</strong>
+<li>🌍 Presentation of the African mission to churches. We keep expanding the mission!</li>
+
+<strong>• 🙏🏼 DECEMBER (Destination Europe ✈️🇪🇺):</strong>
+<li>🗺️ We must cross the pond to other continents. Where will the Lord open doors? I am praying for: United Kingdom, Spain, and the Netherlands!</li>
+`.trim();
+
+const PRAYER_TEXT_PT = `
+<strong>🚨 MOTIVOS CRÍTICOS DE ORAÇÃO 🚨</strong>
+<li><strong>🙏🏼 Pedido Especial pela minha Família 🚘:</strong> Peço encarecidamente que levantem um clamor pela minha família. Meu irmão Ariel sofreu um acidente de carro e infelizmente não tinha carteira de motorista. Pedimos para que Deus traga calma total ao coração dos afetados e nos permita chegar a um acordo, pois eles estão solicitando uma indenização de 5 milhões de pesos ARS.</li>
+<li><strong>🙏🏼 Hogar de Paz a las Naciones 🌍:</strong> É um projeto de discipulado e igreja na nuvem que há muito tempo bate no meu coração. Antes de partir para outro continente, quero que meus discípulos e os recém-convertidos tenham um espaço onde possam continuar crescendo. Todo líder e ministro que quiser se juntar, esta é a visão.</li>
+
+<br />
+<strong>🗓️ PRÓXIMAS MISSÕES E AGENDA DE EVENTOS Acompanhe-me em oração! 🙏🏼</strong>
+<br />
+<strong>• 🙏🏼 SETEMBRO:</strong>
+<li>📍 Obligado: De 03 a 13</li>
+<li>📍 Luque: De 14 a 20</li>
+<li>🎪 Campanha "5 dias de esperança" em 3 Bocas: De 21 a 25</li>
+<li>🌅 Noite de Esperança (Paseo Costero San Antonio): 26/09</li>
+
+<strong>• 🙏🏼 OUTUBRO:</strong>
+<li>🏢 CFA Limpio: Evento especial junto com meu professor David Kandole 🇺🇸</li>
+<li>⛺️ Acampamento de Jesus: Em Buenos Aires, Argentina 🇦🇷 (De 12 a 17)</li>
+<li>🌍 Apresentação da missão na África para as igrejas locais.</li>
+
+<strong>• 🙏🏼 NOVEMBRO:</strong>
+<li>🌍 Apresentação da missão na África para as igrejas. Continuamos expandindo a missão!</li>
+
+<strong>• 🙏🏼 DEZEMBRO (Destino Europa ✈️🇪🇺):</strong>
+<li>🗺️ É hora de atravessar o oceano para outros continentes. Para onde o Senhor abrirá as portas? Estou orando por: Reino Unido, Espanha e Países Baixos!</li>
+`.trim();
+
+const PRAYER_TEXT_DE = `
+<strong>🚨 DRINGENDE GEBETSANLIEGEN 🚨</strong>
+<li><strong>🙏🏼 Besondere Bitte für meine Familie 🚘:</strong> Ich bitte Sie inständig, für meine Familie zu beten. Mein Bruder Ariel hatte einen Autounfall und besaß leider keinen Führerschein. Wir beten, dass Gott den Herzen der Betroffenen völligen Frieden schenkt und es uns ermöglicht, eine Einigung zu erzielen, da eine Entschädigung von 5 Millionen ARS-Pesos gefordert wird.</li>
+<li><strong>🙏🏼 Hogar de Paz a las Naciones 🌍:</strong> Dies ist ein Jüngerschafts- und Cloud-Kirchen-Projekt, das schon lange in meinem Herzen schlägt. Bevor ich auf einen anderen Kontinent aufbreche, möchte ich, dass meine Jünger und die neu bekehrten Jünger einen Ort haben, an dem sie weiter wachsen können. Jeder Leiter und Diener, der sich anschließen möchte – das ist die Vision.</li>
+
+<br />
+<strong>🗓️ KOMMENDE MISSIONEN UND VERANSTALTUNGSKALENDER Begleiten Sie mich im Gebet! 🙏🏼</strong>
+<br />
+<strong>• 🙏🏼 SEPTEMBER:</strong>
+<li>📍 Obligado: Vom 03. bis 13.</li>
+<li>📍 Luque: Vom 14. bis 20.</li>
+<li>🎪 Kampagne "5 Tage der Hoffnung" in 3 Bocas: Vom 21. bis 25.</li>
+<li>🌅 Nacht der Hoffnung (Paseo Costero San Antonio): 26.09.</li>
+
+<strong>• 🙏🏼 OKTOBER:</strong>
+<li>🏢 CFA Limpio: Sonderveranstaltung zusammen mit meinem Lehrer David Kandole 🇺🇸</li>
+<li>⛺️ Jesus-Camp: In Buenos Aires, Argentinien 🇦🇷 (Vom 12. bis 17.)</li>
+<li>🌍 Vorstellung der Afrika-Mission in den örtlichen Gemeinden.</li>
+
+<strong>• 🙏🏼 NOVEMBER:</strong>
+<li>🌍 Vorstellung der Afrika-Mission in den Gemeinden. Wir dehnen die Mission weiter aus!</li>
+
+<strong>• 🙏🏼 DEZEMBER (Ziel Europa ✈️🇪🇺):</strong>
+<li>🗺️ Wir müssen den großen Teich zu anderen Kontinenten überqueren. Wohin wird der Herr die Türen öffnen? Ich bete für: Großbritannien, Spanien und die Niederlande!</li>
+`.trim();
+
+
 // Diccionarios de traducción
 const resources = {
   'en-US': {
@@ -30,13 +137,15 @@ const resources = {
         phrase: '"I will go down into the pit, if you will hold the rope." - William Carey',
         digitalpay: 'Digital Payments & Missionary Suscription with Benefits',
         transfer: 'Direct Bank Transfers',
+        copied: 'Copied!',
+        copy: 'Copy',
         phrase2: '"Go, send, or disobey." - John Piper',
         prayer: 'Prayer Requests 🙏🏼 Matthew 9:37-38',
-        prayertext: "<strong> 🙏🏼 Missions, trips and outreachs in Paraguay - Aug-Sep 2026: </strong><br /><li>return to ALMA, Paraguarí 17/08</li><li>Philadelphia or Yaguarón (God willing) - Outreach 24/08</li><li>Obligado (Youth Crusades and guaraní indigenous villages) <br /> 01-13 September</li><li>Asunción, 3 Bocas, Costanera San Antonio, Big evangelist campaign <br /> 15-26 of September</li><br /><strong> 🙏🏼 Guinea Bissau, January 2027: </strong><br /><li>May God prepare the ground, open hearts and heavens in Guinea-Bissau, in Muslim villages, and wherever we go to sow the Gospel</li><li>Youth Crusades in schools, including Muslim schools. May God grant us freedom to enter and find favor and grace with the principals of these educational institutions so that we may reach these children, teenagers, and young adults</li><li>God’s provision for the entire CFAN team of 15–20 people approx. 3,500–5,000 USD per person</li>",
+        prayertext: PRAYER_TEXT_EN,
         data1: 'Goal Africa 2027',
         data2: 'Faith Missions Experiences',
         data3: 'Countries visited',
-        donationimg1: 'sow-into-the-mission-to-guinea-bissau-post.jpg',
+        donationimg1: 'sow-into-the-mission-to-guinea-bissau-post.png',
         donationimg2: '/IG-post-Mission-2027.jpg'
       },
       contact: {
@@ -117,13 +226,14 @@ const resources = {
         phrase: '"Descenderé al pozo, si tú sostienes la cuerda." - William Carey',
         digitalpay: 'Pagos digitales y suscripción misionera con beneficios',
         transfer: 'Transferencias bancarias directas',
+        copied: '¡Copiado!',
+        copy: 'Copiar',
         phrase2: '"Ve, envía o desobedece." - John Piper',
         prayer: 'Peticiones de oración 🙏🏼',
-        prayertext: "<strong> 🙏🏼 Misiones, viajes y evangelismos en Paraguay - Ago-Sep 2026: </strong><br /><li>Regreso a ALMA, Paraguarí 17/08</li><li>Philadelphia o Yaguarón (Dios mediante) - Evangelismo 24/08</li><li>Obligado (Crusadas Juveniles y aldeas indígenas guaraníes) <br /> 01-13 de Septiembre</li><li>Asunción, 3 Bocas, Costanera San Antonio, Gran campaña evangelística <br /> 15-26 de Septiembre</li><br /><strong> 🙏🏼 Guinea Bissau, Enero 2027: </strong><br /><li>Que Dios prepare el terreno, abra corazones y cielos en Guinea-Bissau, en aldeas musulmanas y donde quiera que vayamos a sembrar el Evangelio</li><li>Crusadas Juveniles en escuelas, incluyendo escuelas musulmanas. Que Dios nos conceda libertad para entrar y encontrar favor y gracia con los directores de estas instituciones educativas para que podamos alcanzar a estos niños, adolescentes y jóvenes adultos</li><li>Provisión de Dios para todo el equipo de CFAN de 15–20 personas aprox. 3.500–5.000 USD por persona</li>",
-        data1: 'Meta África 2027',
+        prayertext: PRAYER_TEXT_ES,
         data2: 'Experiencias de Misiones de Fe',
         data3: 'Países alcanzados',
-        donationimg1: '/Siembra-en-la-misión-Guinea-Bissau-2027.jpg',
+        donationimg1: '/Siembra-en-la-misión-Guinea-Bissau-2027.png',
         donationimg2: '/IG-post-Mision-2027.JPG'
       },
       contact: {
@@ -204,13 +314,15 @@ const resources = {
         phrase: '"Eu desceria ao poço, se você segurasse a corda." - William Carey',
         digitalpay: 'Pagamentos digitais e assinatura missionária com benefícios',
         transfer: 'Transferências bancárias diretas',
+        copied: 'Copiado!',
+        copy: 'Copiar',
         phrase2: '"Vá, envie ou desobedeça." - John Piper',
         prayer: 'Pedidos de oração 🙏🏼',
-        prayertext: "<strong> 🙏🏼 Missões, viagens e evangelismos no Paraguai - Ago-Set 2026: </strong><br /><li>Retorno a ALMA, Paraguarí 17/08</li><li>Philadelphia ou Yaguarón (Se Deus quiser) - Evangelismo 24/08</li><li>Obligado (Cruzes Juvenis e aldeias indígenas guaranis) <br /> 01-13 de Setembro</li><li>Assunção, 3 Bocas, Costanera San Antonio, Grande campanha evangelística <br /> 15-26 de Setembro</li><br /><strong> 🙏🏼 Guiné-Bissau, Janeiro 2027: </strong><br /><li>Que Deus prepare o terreno, abra corações e céus na Guiné-Bissau, em aldeias muçulmanas e onde quer que vamos semear o Evangelho</li><li>Cruzes Juvenis em escolas, incluindo escolas muçulmanas. Que Deus nos conceda liberdade para entrar e encontrar favor e graca com os directores dessas instituições educacionais para que possamos alcançar essas crianças, adolescentes e jovens adultos</li><li>Provisão de Deus para toda a equipe do CFAN de 15–20 pessoas aprox. 3.500–5.000 USD por pessoa</li>",
+        prayertext: PRAYER_TEXT_PT,
         data1: 'Meta África 2027',
         data2: 'Experiências de Misiones de Fe',
         data3: 'Países alcançados',
-        donationimg1: '/Siembra-en-la-misión-Guinea-Bissau-2027.jpg',
+        donationimg1: '/Siembra-en-la-misión-Guinea-Bissau-2027.png',
         donationimg2: '/IG-post-Mision-2027.JPG'
       },
       contact: {
@@ -291,14 +403,16 @@ const resources = {
         phrase: '"Ich werde in die Grube hinabsteigen, wenn du das Seil hältst." - William Carey',
         digitalpay: 'Digitale Zahlungen & Missionarisches Abonnement mit Vorteilen',
         transfer: 'Direkte Banküberweisungen',
+        copied: 'Kopiert!',
+        copy: 'Kopieren',
         phrase2: '"Geh, sende oder ungehorsam." - John Piper',
         prayer: ' Gebetsanfragen 🙏🏼',
-        prayertext: "<strong> 🙏🏼 Missionen, Reisen und Evangelisation in Paraguay - Aug-Sep 2026: </strong><br /><li>Rückkehr zu ALMA, Paraguarí 17/08</li><li>Philadelphia oder Yaguarón (Gott willing) - Evangelisation 24/08</li><li>Obligado (Jugendkreuze und indigene Guarani-Dörfer) <br /> 01-13. September</li><li>Asunción, 3 Bocas, Costanera San Antonio, große evangelische Kampagne <br /> 15-26. September</li><br /><strong> 🙏🏼 Guinea-Bissau, Januar 2027: </strong><br /><li>Dass Gott den Boden vorbereitet, Herzen und Himmel öffnet in Guinea-Bissau, in muslimischen Dörfern und überall, wo wir das Evangelium aussäen werden</li><li>Jugendkreuze in Schulen, einschließlich muslimischer Schulen. Dass Gott uns Freiheit gibt einzutreten und Gefälligkeit und Gnade bei den Schulleitern zu finden, damit wir diese Kinder, Jugendliche und jungen Erwachsenen erreichen können</li><li>Gottes Versorgung für das gesamte CFAN-Team von 15–20 Personen etwa 3.500–5.000 USD pro Person</li>",
+        prayertext: PRAYER_TEXT_DE,
         data1: 'Afrika-Ziel 2027',
         data2: 'Erfahrungen mit Glaubensmission',
         data3: 'erreichte Länder',
-        donationimg1: '/sow-into-the-mission-to-guinea-bissau-post.jpg',
-        donationimg2: '/IG-post-Mission-2027.jpg'
+        donationimg1: '/sae-en-de-mission.png',
+        donationimg2: '/IG german Mission GB 2027.jpg'
       },
       contact: {
         title: 'Kontaktieren Sie uns',
@@ -355,14 +469,11 @@ const resources = {
 }
 
 i18n
-  .use(LanguageDetector) // Detecta el idioma del navegador automáticamente
-  .use(initReactI18next) // Pasa i18n a react-i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en-US', // Idioma por defecto si el detectado no está disponible
-    interpolation: {
-      escapeValue: false // React ya protege contra ataques XSS
-    }
+    fallbackLng: 'en-US', // 👈 Idioma por defecto si todo falla
   });
 
 export default i18n;

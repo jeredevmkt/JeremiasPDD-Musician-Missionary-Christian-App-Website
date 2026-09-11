@@ -14,9 +14,8 @@ This platform serves as a digital ministry tool to share the message of Christ, 
 
 - **Frontend:** Next.js 15 + React 19 + TypeScript
 - **Styling:** Tailwind CSS
-- **Database:** Supabase (PostgreSQL)
+- **Database:** Neon (Pure PostgreSQL)
 - **Hosting:** Vercel
-- **Storage:** Supabase Storage
 
 ---
 
@@ -30,34 +29,6 @@ This platform serves as a digital ministry tool to share the message of Christ, 
 - **📧 Subscriptions & Inquiries:** Fully functional contact form paired with an engaging pop-up newsletter system.
 - **📱 Ultra-Responsive:** Modern, fluid interface optimized for all device sizes (Mobile + Desktop).
 - **🌙 Dark Mode:** Sleek visual design tailored for low-light environments.
-
----
-
-## 🎛️ Admin Panel for Content Management
-
-This project features a secure, fully integrated **Admin Dashboard** built with Next.js and connected directly to **Supabase** (Database and Storage). It allows the site administrator to perform complete **CRUD (Create, Read, Update, Delete)** operations to manage all public-facing content and user inquiries in real-time.
-
-### 🛡️ 1. Access Control & Security
-
-- **Protected Authentication:** Access to the dashboard is restricted by a secure, hardcoded administrator password (`official-y.e`). If an unauthenticated user attempts to access the dashboard route directly, the system automatically redirects them back to the login page.
-- **Session Lifecycle Management:** Upon a successful login, a temporary session flag is stored securely within the browser (`sessionStorage`).
-- **Safe Termination:** The administrator can securely log out at any time using the _Logout_ button, which immediately clears the session flags from the browser and restricts access once again.
-
-### 🗂️ 2. Structured Navigation (Modular Ecosystem)
-
-The control panel implements a dynamic 5-tab system that allows the administrator to switch instantly between the core operational areas of the website:
-
-1. **Songs:** Manage tracks, metadata, and audio resources.
-2. **Shows (Performances):** Manage the live gig schedule, dates, and ticket links.
-3. **Backing Tracks (Playbacks):** Manage commercial backing tracks available for purchase.
-4. **Messages:** Central inbox displaying customer inquiries received through the contact form.
-
-### 🔍 3. Data Auditing, Monitoring & Deletion
-
-- **Chronological Feeds:** Content is rendered in clean, structured lists sorted by logic (e.g., songs by newest creation date or shows by closest upcoming event date).
-- **In-App Track Previews:** Every record in the _Songs_ and _Playbacks_ tabs features a native HTML `<audio controls />` player. This allows the admin to review any uploaded audio asset directly within the panel without leaving the platform.
-- **Inbound Message Auditing:** The _Messages_ tab acts as a read-only stream. The admin can audit client names, emails, conversation topics (`subject`), and the full query body, marked by an international timestamp format (`en-US`).
-- **Permanent Data Purging:** The administrator can clean up the workspace via the **Delete** button. The system prompts a browser-native confirmation modal to prevent accidental data loss before executing the hard deletion query on Supabase.
 
 ---
 
@@ -76,19 +47,18 @@ cd jeremiaspdd-missionary-and-musician-website
 yarn install
 ```
 
-### 3. Setup Supabase Account
+### 3. Setup Neon Account
 
-1. Go to [supabase.com](https://supabase.com)
+1. Go to [neon.com](https://neon.com)
 2. Create a new project.
-3. Copy your project **URL** and **ANON_KEY** from the Settings section.
+3. Copy your project database **URL** from the Settings section.
 
 ### 4. Setup Environment Variables
 
 Create a `.env.local` file in the root directory:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+DATABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_CONTACT_EMAIL=example@email.com
 ```
 
@@ -99,13 +69,6 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## ⚙️ Admin Dashboard Access
-
-- **Route:** `/admin`
-- **Access Password:** `official-y.e`
 
 ---
 

@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
-
-interface Performance {
+import { getPerformancesAction } from '../../lib/actions'
+export interface Performance {
   id: string
   title: string
   date: string
@@ -31,13 +30,17 @@ export default function Performances() {
   // Fetch show data from the database
   useEffect(() => {
     async function fetchData() {
-      const { data } = await supabase
-        .from('performances')
-        .select('*')
-        .order('date', { ascending: true })
-      setPerformances(data || [])
+      // Llamamos a la acción segura en Neon
+      const result = await getPerformancesAction()
+
+      if (result.success) {
+        setPerformances(result.data) // TypeScript lo procesará correctamente
+      } else {
+        setPerformances([])
+      }
       setLoading(false)
     }
+
     fetchData()
   }, [])
 

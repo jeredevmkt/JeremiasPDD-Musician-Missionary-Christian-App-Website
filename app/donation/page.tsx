@@ -1,12 +1,16 @@
 'use client'
+
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import NewsletterModal from "../../components/NewsletterModal";
-import { SiPaypal, SiWise, SiPatreon, SiBinance, SiMercadopago } from 'react-icons/si';
+import { SiPaypal, SiPatreon, SiMercadopago } from 'react-icons/si';
 import { FaCoffee } from 'react-icons/fa'; // Usamos un icono de café limpio para Cafecito
 import { FiGlobe } from 'react-icons/fi'; // Para SEPA/Europa como comodín global
 import { AR, PY, CL, US, UY } from 'country-flag-icons/react/3x2';
+import dynamic from 'next/dynamic';
+import i18next from 'i18next';
+import '../../lib/i18n'; // Asegúrate de que la configuración de i18next esté importada
 
 // Definimos la interfaz para evitar cualquier error de tipo any en TypeScript
 interface CuentaBancaria {
@@ -18,12 +22,44 @@ interface CuentaBancaria {
   flag: React.ReactNode;
 }
 
-export default function Donation() {
+function Donation() {
 
-  const { t } = useTranslation()
-
+  const { t } = useTranslation();
+  const [isReady, setIsReady] = useState(false);
   // Estado para manejar el copiado de los CBU/IBAN
   const [copiado, setCopiado] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Verificamos si i18next está inicializado de verdad
+    if (i18next.isInitialized) {
+      setIsReady(true);
+    } else {
+      // Si no lo está, escuchamos su evento nativo de inicialización
+      const handleInitialized = () => {
+        setIsReady(true);
+      };
+      i18next.on('initialized', handleInitialized);
+
+      // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+      const backupTimer = setTimeout(() => {
+        setIsReady(true);
+      }, 100);
+
+      return () => {
+        i18next.off('initialized', handleInitialized);
+        clearTimeout(backupTimer);
+      };
+    }
+  }, []);
+
+  // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+        <p className="text-lg">Loading translations...</p>
+      </div>
+    );
+  }
 
   const copiarAlPortapapeles = (texto: string, id: string) => {
     navigator.clipboard.writeText(texto);
@@ -35,7 +71,6 @@ export default function Donation() {
   const plataformas = [
     { name: 'Mercado Pago', color: 'bg-[#009EE3] hover:bg-[#007EB5]', link: 'https://link.mercadopago.com.ar/adonai', logo: <SiMercadopago className="w-5 h-6" /> }, // MP requiere un poco más de tamaño por su forma
     { name: 'PayPal', color: 'bg-[#003087] hover:bg-[#002261]', link: 'https://paypal.me/jeremiaspdd', logo: <SiPaypal className="w-5 h-5" /> },
-    { name: 'Wise', color: 'bg-[#00B67A] hover:bg-[#009161]', link: 'https://wise.com/pay/me/jeremiase8', logo: <SiWise className="w-5 h-5" /> },
     { name: 'Patreon', color: 'bg-[#FF424D] hover:bg-[#D6303A]', link: 'https://patreon.com/jeremiaspdd?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', logo: <SiPatreon className="w-5 h-5" /> },
     { name: 'Cafecito.app', color: 'bg-[#00ACEE] hover:bg-[#008BBF]', link: 'https://cafecito.app/jeremiaspdd', logo: <FaCoffee className="w-5 h-5" /> },
   ];
@@ -46,8 +81,8 @@ export default function Donation() {
     { id: 'arg', pais: 'Argentina', banco: 'Naranja X', detalle: 'CBU: 4530000800012888268094', alias: 'ALIAS: misionguinea Titular: Jeremias Nahuel Escobedo', flag: <AR className="w-6 h-4 rounded shadow-sm" /> },
     { id: 'cl', pais: 'Chile', banco: 'Global66', detalle: '13005196', alias: 'ID: 530156621', flag: <CL className="w-6 h-4 rounded shadow-sm" /> },
     { id: 'uy', pais: 'Uruguay', banco: 'Banco Prex', detalle: 'Nº Cuenta: 1733811', alias: 'Titular: Jeremias Nahuel Escobedo', flag: <UY className="w-6 h-4 rounded shadow-sm" /> },
-    { id: 'usa', pais: 'Estados Unidos', banco: 'Community Federal Savings', detalle: 'Rut Number (ACH-Wire): 026073150', alias: 'Account Nº: 8311995435 Checking Acc Swift/Bic: CMFGUS33', flag: <US className="w-6 h-4 rounded shadow-sm" /> },
-    { id: 'sepa', pais: 'Europa (SEPA)', banco: 'Wise', detalle: 'IBAN: BE35 9672 6830 9137', alias: 'BIC/SWIFT: TRWIBEB1XXX', flag: <FiGlobe className="w-5 h-5 text-blue-600" /> },
+    { id: 'usa', pais: 'Estados Unidos', banco: 'Community Federal Savings Bank', detalle: 'Account Nº: 8337339533', alias: 'Rut Number (ACH-Wire): 026073150 Checking Acc Swift/Bic: CMFGUS33', flag: <US className="w-6 h-4 rounded shadow-sm" /> },
+    { id: 'sepa', pais: 'Europa (SEPA)', banco: 'The Currency Cloud Limited', detalle: 'IBAN: GB41 TCCL 0099 7955 427136', alias: 'Bank Address: 12 Steward Street, The Steward Building, London, E1 6FQ, GB', flag: <FiGlobe className="w-5 h-5 text-blue-600" /> },
   ];
 
   return (
@@ -77,7 +112,7 @@ export default function Donation() {
             <div className="mb-12">
               <h3 className="text-xl font-bold text-gray-700 mb-4 px-2">💳 {t('donation.digitalpay')}</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {plataformas.map((p, index) => (
+                {plataformas?.map((p, index) => (
                   <motion.a
                     key={index}
                     href={p.link}
@@ -128,7 +163,7 @@ export default function Donation() {
                       onClick={() => copiarAlPortapapeles(`${c.detalle} - ${c.alias}`, c.id)}
                       className="absolute right-3 top-3 bg-gray-100 hover:bg-200 text-gray-600 text-xs px-2 py-1 rounded-md transition-all opacity-0 group-hover:opacity-100"
                     >
-                      {copiado === c.id ? '✅ ¡Copiado!' : '📋 Copiar'}
+                      {copiado === c.id ? '✅ ' + t('donation.copied') : '📋 ' + t('donation.copy')}
                     </button>
                   </div>
                 ))}
@@ -181,3 +216,7 @@ export default function Donation() {
     </main>
   )
 }
+
+export default dynamic(() => Promise.resolve(Donation), {
+  ssr: false
+});

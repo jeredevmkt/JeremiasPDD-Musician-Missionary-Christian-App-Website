@@ -3,6 +3,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Syne } from 'next/font/google' // Cambiada por una fuente musical y vanguardista
+import { Analytics } from "@vercel/analytics/next"
 
 const syne = Syne({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   )

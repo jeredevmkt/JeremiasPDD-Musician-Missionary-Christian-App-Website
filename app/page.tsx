@@ -1,6 +1,7 @@
 'use client'
 
-import GlowText from '@/components/GlowText'
+import { useState, useEffect } from 'react';
+// import GlowText from '@/components/GlowText'
 import Link from 'next/link'
 import { motion, Variants, AnimatePresence } from 'framer-motion'
 import '../lib/i18n'
@@ -8,8 +9,46 @@ import { useTranslation } from 'react-i18next'
 import IgLobby from "../components/iglobby"
 import HeroBackground from "../components/herobackground"
 import NewsletterModal from "../components/NewsletterModal";
+import dynamic from 'next/dynamic';
+import i18next from 'i18next';
 
-export default function Home() {
+function Home() {
+
+  const { t } = useTranslation()
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Verificamos si i18next está inicializado de verdad
+    if (i18next.isInitialized) {
+      setIsReady(true);
+    } else {
+      // Si no lo está, escuchamos su evento nativo de inicialización
+      const handleInitialized = () => {
+        setIsReady(true);
+      };
+      i18next.on('initialized', handleInitialized);
+
+      // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+      const backupTimer = setTimeout(() => {
+        setIsReady(true);
+      }, 100);
+
+      return () => {
+        i18next.off('initialized', handleInitialized);
+        clearTimeout(backupTimer);
+      };
+    }
+  }, []);
+
+  // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+        <p className="text-lg">Loading translations...</p>
+      </div>
+    );
+  }
+
   // 1. Explicitly defining types for Variants resolves TypeScript compilation errors
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 30 },
@@ -48,8 +87,6 @@ export default function Home() {
   //   { title: "Mixing & Mastering", desc: "Precise audio engineering for a flawless, polished final result.", icon: <><circle cx="12" cy="12" r="10" /><path d="M6 12c0-1.7.7-3.2 1.8-4.2" /><circle cx="12" cy="12" r="2" /><path d="M18 12c0 1.7-.7 3.2-1.8 4.2" /></> },
   //   { title: "Backing Tracks", desc: "Professional playbacks and backing tracks ready to purchase across various genres.", icon: <><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /><path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" /></> }
   // ];
-
-  const { t } = useTranslation()
 
   return (
     <main className="min-h-screen bg-[#0f0f1e] text-white overflow-x-hidden">
@@ -326,3 +363,7 @@ export default function Home() {
     </main >
   )
 }
+
+export default dynamic(() => Promise.resolve(Home), {
+  ssr: false
+});

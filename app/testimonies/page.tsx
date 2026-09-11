@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FaFilePdf, FaExternalLinkAlt } from 'react-icons/fa';
 import { SiCanvas, SiYoutube } from 'react-icons/si';
-import { supabase } from '@/lib/supabase';
 import NewsletterModal from "../../components/NewsletterModal";
-
-interface TestimonyItem {
+import dynamic from 'next/dynamic';
+import i18next from 'i18next';
+import '../../lib/i18n';
+import { getTestimoniesAction } from '../../lib/actions'
+export interface TestimonyItem {
   id: string;
   title: string;
   url_id: string;
@@ -17,31 +19,66 @@ interface TestimonyItem {
   lang: string;
 }
 
-export default function Testimonies() {
+function Testimonies() {
   const { t, i18n } = useTranslation();
   const [items, setItems] = useState<TestimonyItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
 
   // 1. SOLUCIÓN AL BUG: Mantenemos i18n.language fijo en las dependencias para que el tamaño NUNCA cambie
   useEffect(() => {
     async function fetchTestimonies() {
       setLoading(true);
       try {
-        const { data, error } = await supabase
-          .from('testimonies')
-          .select('*'); // Traemos la tabla completa limpia
+        // Llamamos a la acción segura del servidor de Neon
+        const result = await getTestimoniesAction()
 
-        if (error) throw error;
+        if (!result.success) throw new Error("No se pudieron cargar los datos");
 
-        setItems((data as TestimonyItem[]) || []);
+        // Modificamos el estado con los datos obtenidos
+        setItems(result.data);
       } catch (err) {
-        console.error("Error crítico leyendo Supabase:", err);
+        console.error("Error crítico leyendo Neon:", err);
+        setItems([]);
       } finally {
         setLoading(false);
       }
     }
+
     fetchTestimonies();
   }, [i18n.language]);
+
+  useEffect(() => {
+    // Verificamos si i18next está inicializado de verdad
+    if (i18next.isInitialized) {
+      setIsReady(true);
+    } else {
+      // Si no lo está, escuchamos su evento nativo de inicialización
+      const handleInitialized = () => {
+        setIsReady(true);
+      };
+      i18next.on('initialized', handleInitialized);
+
+      // Como salvavidas, si tarda demasiado, forzamos el encendido a los 100ms
+      const backupTimer = setTimeout(() => {
+        setIsReady(true);
+      }, 100);
+
+      return () => {
+        i18next.off('initialized', handleInitialized);
+        clearTimeout(backupTimer);
+      };
+    }
+  }, []);
+
+  // Si i18next no ha cargado los diccionarios en memoria, congelamos el renderizado
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center text-white">
+        <p className="text-lg">Loading translations...</p>
+      </div>
+    );
+  }
 
   // 2. FILTRADO CON JAVASCRIPT: Ordenamos primero por prioridad
   const itemsOrdenados = [...items].sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
@@ -237,3 +274,7 @@ export default function Testimonies() {
     </main>
   );
 }
+
+export default dynamic(() => Promise.resolve(Testimonies), {
+  ssr: false
+});
